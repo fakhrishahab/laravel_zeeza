@@ -20,7 +20,11 @@ class CategoryController extends Controller
     	return $this->data->get_data();
     }
 
-    function getType(){
-    	return $this->data->get_type();
+    function getType($id=null){
+    	return $this->data->get_type($id);
+    }
+
+    function getSize(){
+        return $this->data->get_size();
     }
 }

@@ -12,7 +12,11 @@ class category extends Model
 		return DB::table('product_category')->get();
 	}
 
-	function get_type(){
-		return DB::table('product_type')->get();	
+	function get_type($id){
+		return DB::table('product_type')->where('id_category', $id)->get();	
+	}
+
+	function get_size(){
+		return DB::table('product_age')->get();
 	}
 }

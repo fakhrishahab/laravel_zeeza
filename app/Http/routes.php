@@ -31,4 +31,10 @@ Route::group(['middleware' => ['web']], function () {
 });
 
 Route::get('category', 'CategoryController@getCategory');
-Route::get('type', 'CategoryController@getType');
+Route::get('type/{id?}', 'CategoryController@getType');
+Route::get('size', 'CategoryController@getSize');
+Route::get('brand', 'productController@getBrand');
+Route::get('last_code/{id?}', 'productController@getCode');
+
+Route::post('product', 'productController@create');
+Route::get('image', 'productController@getImage');
