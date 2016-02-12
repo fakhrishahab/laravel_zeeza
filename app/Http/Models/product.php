@@ -73,7 +73,7 @@ class product extends Model
 	function get_data($limit, $offset, $id){
 
 		if($id != null || $id != ''){
-			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->get();	
+			$result = DB::table('product')->where('code','ilike', '%'.$id.'%')->skip($offset)->take($limit)->get();	
 		}else{
 			$result = DB::table('product')->skip($offset)->take($limit)->get();
 		}
