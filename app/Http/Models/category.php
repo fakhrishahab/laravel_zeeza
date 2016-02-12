@@ -13,7 +13,18 @@ class category extends Model
 	}
 
 	function get_type($id){
-		return DB::table('product_type')->where('id_category', $id)->orderBy('id_type')->get();	
+		if($id){
+			return DB::table('product_type')->where('id_category', $id)->orderBy('id_type')->get();
+		}else{
+			// return DB::table('product_type')->orderBy('id_type')->get();
+			$result = DB::table('product_type')
+						->join('product_category', 'product_category.id_category' , '=', 'product_type.id_category')
+						->select('product_type.*', 'product_category.name as category')
+						->get();
+			return $result;
+		}
+		// return $id;
+		// return DB::table('product_type')->where('id_category', $id)->orderBy('id_type')->get();	
 	}
 
 	function get_size(){

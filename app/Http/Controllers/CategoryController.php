@@ -20,7 +20,8 @@ class CategoryController extends Controller
     	return $this->data->get_data();
     }
 
-    function getType($id=null){
+    function getType(Request $request){
+        $id = $request->input('id');
     	return $this->data->get_type($id);
     }
 
