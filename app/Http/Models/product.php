@@ -69,4 +69,19 @@ class product extends Model
 			return Response(null, 200);
 		}
 	}
+
+	function get_data($limit, $offset, $id){
+
+		if($id != null || $id != ''){
+			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->get();	
+		}else{
+			$result = DB::table('product')->skip($offset)->take($limit)->get();
+		}
+		// return DB::table('product')->count();
+		// $result = DB::table('product')->where('code', $id)->skip($offset)->take($limit)->get();
+		return array(
+			'count' => DB::table('product')->count(),
+			'result' => $result
+			);
+	}
 }

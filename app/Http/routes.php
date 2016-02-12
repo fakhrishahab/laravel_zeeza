@@ -38,3 +38,5 @@ Route::get('last_code/{id?}', 'productController@getCode');
 
 Route::post('product', 'productController@create');
 Route::get('image', 'productController@getImage');
+
+Route::get('admin_product', 'adminProductController@get');
