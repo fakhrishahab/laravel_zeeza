@@ -38,11 +38,19 @@ Route::group(['prefix'=>'brand'], function(){
 });
 
 Route::group(['prefix'=>'product'], function(){
+	Route::get('', 'productController@index');
 	Route::post('create', 'productController@create');
+	Route::get('detail', 'productController@show');	
 });
 
 Route::group(['prefix'=>'type'], function(){
 	Route::get('view', 'CategoryController@getType');	
+});
+
+Route::group(['prefix'=>'menu'], function(){
+	Route::get('', 'menuController@index');
+	Route::get('nav', 'menuController@getNav');
+	Route::get('content', 'menuController@getContent');
 });
 
 
@@ -52,3 +60,8 @@ Route::get('last_code/{id?}', 'productController@getCode');
 Route::get('image', 'productController@getImage');
 
 Route::get('admin_product', 'adminProductController@get');
+
+Route::group(['prefix'=>'admin_content'], function(){
+	Route::get('menu', 'adminContentController@getMenu');
+	Route::get('menu_detail', 'adminContentController@getMenuDetail');
+});

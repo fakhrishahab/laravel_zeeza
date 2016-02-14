@@ -24,16 +24,24 @@ class productController extends Controller
         $this->data = new product;
     }
     
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $pages = Page::all();;
+        // return $request->input();
+        if($request->input()){
+            return $this->data->filter_product($request);
+            // return $this->data->latest_product();    
+        }else{
+            return $this->data->latest_product();    
+        }
+        
+        // //
+        // $pages = Page::all();;
 
-        return Response::json(array(
-            'status' => 'success',
-            'pages' => $pages->toArray()),
-            200
-        );
+        // return Response::json(array(
+        //     'status' => 'success',
+        //     'pages' => $pages->toArray()),
+        //     200
+        // );
     }
 
     /**
@@ -66,9 +74,9 @@ class productController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request)
     {
-        //
+        return $this->data->show_product($request->input('id'));
     }
 
     /**

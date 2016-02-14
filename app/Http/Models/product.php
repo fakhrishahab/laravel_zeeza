@@ -5,6 +5,7 @@ namespace App\Http\Models;
 use DB;
 use Response;
 use Carbon\Carbon;
+use Config;
 // use Illuminate\Http\Request;
 // use App\Fileentry;
 // use Fileentry;
@@ -82,6 +83,41 @@ class product extends Model
 		return array(
 			'count' => DB::table('product')->count(),
 			'result' => $result
+			);
+	}
+
+	function latest_product(){
+		return DB::table('product')->orderBy('created_date', 'DESC')->skip(0)->take(12)->get();
+	}
+
+	function show_product($id){
+		$product = DB::table('product')
+					->join('product_age', 'product_age.id_age', '=', 'product.age')
+					->where('product.id', $id)
+					->select('product.*', 'product_age.name as size')
+					->get();
+		$product[0]->image = Config::get('constant.SITE_PATH').'image?img='.$product[0]->code;
+		return $product;
+	}
+
+	function filter_product($req){
+		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
+		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
+		$filter = DB::table('product')
+					->join('product_age', 'product_age.id_age', '=', 'product.age')
+					->where('product.category', $req['id'])
+					->skip($offset)
+					->take($limit)
+					->select('product.*', 'product_age.name as size')
+					->orderBy('product.created_date')
+					->get();
+		foreach ($filter as $key => $value) {
+			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+		}
+
+		return array(
+			'count' => DB::table('product')->where('category', $req['id'])->count(),
+			'result' => $filter
 			);
 	}
 }

@@ -15,7 +15,19 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        'App\Http\Middleware\CORS',
     ];
+
+//      protected $middleware = [
+//         'Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode',
+//         'Illuminate\Cookie\Middleware\EncryptCookies',
+//         'Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse',
+//         'Illuminate\Session\Middleware\StartSession',
+//         'Illuminate\View\Middleware\ShareErrorsFromSession',
+// //      'LucaDegasperi\OAuth2Server\Middleware\OAuthExceptionHandlerMiddleware', // oauth
+//         'App\Http\Middleware\CORS', // ini untuk bisa diakses json dari ip address lain
+        
+//     ];
 
     /**
      * The application's route middleware groups.
@@ -49,4 +61,6 @@ class Kernel extends HttpKernel
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
     ];
+
+
 }
