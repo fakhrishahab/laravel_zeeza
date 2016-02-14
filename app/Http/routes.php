@@ -59,7 +59,7 @@ Route::get('last_code/{id?}', 'productController@getCode');
 
 Route::get('image', 'productController@getImage');
 
-Route::get('admin_product', 'adminProductController@get');
+Route::get('admin_product', 'AdminProductController@get');
 
 Route::group(['prefix'=>'admin_content'], function(){
 	Route::get('menu', 'adminContentController@getMenu');
