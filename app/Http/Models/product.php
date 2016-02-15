@@ -75,13 +75,15 @@ class product extends Model
 
 		if($id != null || $id != ''){
 			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->get();	
+			$count = DB::table('product')->where('code','like', '%'.$id.'%')->count();
 		}else{
 			$result = DB::table('product')->skip($offset)->take($limit)->get();
+			$count = DB::table('product')->count();
 		}
 		// return DB::table('product')->count();
 		// $result = DB::table('product')->where('code', $id)->skip($offset)->take($limit)->get();
 		return array(
-			'count' => DB::table('product')->count(),
+			'count' => $count,
 			'result' => $result
 			);
 	}
