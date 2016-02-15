@@ -93,11 +93,11 @@ class product extends Model
 		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
 		$filter = DB::table('product')
 					->join('product_age', 'product_age.id_age', '=', 'product.age')
-					->orderBy('created_date', 'DESC')
+					// ->orderBy('created_date', 'DESC')
 					->skip($offset)
 					->take($limit)
 					->select('product.*', 'product_age.name as size')
-					->orderBy('product.created_date')
+					->orderBy('product.created_date', 'DESC')
 					->get();
 		foreach ($filter as $key => $value) {
 			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
