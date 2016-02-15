@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Response;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Models\category;
@@ -27,5 +28,17 @@ class CategoryController extends Controller
 
     function getSize(){
         return $this->data->get_size();
+    }
+
+    function create(Request $request){
+        $category = new category;
+        $category->name = $request->input('name');
+        $category->save();
+
+        return Response::json(array(
+            'error' => false,
+            'pages' => $category->toArray()),
+            200
+        );
     }
 }

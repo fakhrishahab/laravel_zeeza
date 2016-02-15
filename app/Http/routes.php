@@ -66,3 +66,11 @@ Route::group(['prefix'=>'admin_content'], function(){
 	Route::get('menu', 'adminContentController@getMenu');
 	Route::get('menu_detail', 'adminContentController@getMenuDetail');
 });
+
+Route::group(['prefix'=>'admin_category'], function(){
+	Route::post('create', 'CategoryController@create');
+});
+
+Route::group(['prefix'=>'admin_type'], function(){
+	Route::post('create', 'AdminTypeController@create');
+});
