@@ -31,7 +31,7 @@ class productController extends Controller
             return $this->data->filter_product($request);
             // return $this->data->latest_product();    
         }else{
-            return $this->data->latest_product();    
+            return $this->data->latest_product($request);    
         }
         
         // //
@@ -125,5 +125,10 @@ class productController extends Controller
         $response = Response::make(File::get('public/upload/'.$request->input('img').'.jpg'));
         $response->header('Content-Type', 'image/png');
         return $response;
+    }
+
+    function search(Request $request){
+        // $code = $request->input('code');
+        return $this->data->search_product($request);
     }
 }

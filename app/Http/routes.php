@@ -41,6 +41,7 @@ Route::group(['prefix'=>'product'], function(){
 	Route::get('', 'productController@index');
 	Route::post('create', 'productController@create');
 	Route::get('detail', 'productController@show');	
+	Route::get('search', 'productController@search');
 });
 
 Route::group(['prefix'=>'type'], function(){

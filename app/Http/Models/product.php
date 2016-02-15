@@ -74,7 +74,7 @@ class product extends Model
 	function get_data($limit, $offset, $id){
 
 		if($id != null || $id != ''){
-			$result = DB::table('product')->where('code','ilike', '%'.$id.'%')->skip($offset)->take($limit)->get();	
+			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->get();	
 		}else{
 			$result = DB::table('product')->skip($offset)->take($limit)->get();
 		}
@@ -86,8 +86,24 @@ class product extends Model
 			);
 	}
 
-	function latest_product(){
-		return DB::table('product')->orderBy('created_date', 'DESC')->skip(0)->take(12)->get();
+	function latest_product($req){
+		// return DB::table('product')->orderBy('created_date', 'DESC')->skip(0)->take(12)->get();
+
+		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
+		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
+		$filter = DB::table('product')
+					->join('product_age', 'product_age.id_age', '=', 'product.age')
+					->orderBy('created_date', 'DESC')
+					->skip($offset)
+					->take($limit)
+					->select('product.*', 'product_age.name as size')
+					->orderBy('product.created_date')
+					->get();
+		foreach ($filter as $key => $value) {
+			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+		}
+
+		return $filter;
 	}
 
 	function show_product($id){
@@ -103,9 +119,38 @@ class product extends Model
 	function filter_product($req){
 		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
 		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
+		if($req->input('id')){
+			$where = ['product.category' => $req->input('id')];
+		}else if($req->input('size')){
+			$where = ['product.age' => $req->input('size')];
+		}else if($req->input('brand')){
+			$where = ['product.brand' => $req->input('brand')];
+		}
+
 		$filter = DB::table('product')
 					->join('product_age', 'product_age.id_age', '=', 'product.age')
-					->where('product.category', $req['id'])
+					->where($where)
+					->skip($offset)
+					->take($limit)
+					->select('product.*', 'product_age.name as size')
+					->orderBy('product.price_disc')
+					->get();
+		foreach ($filter as $key => $value) {
+			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+		}
+
+		return array(
+			'count' => DB::table('product')->where($where)->count(),
+			'result' => $filter
+			);
+	}
+
+	function search_product($req){
+		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
+		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
+		$filter = DB::table('product')
+					->join('product_age', 'product_age.id_age', '=', 'product.age')
+					->where('product.code', 'like', '%'.$req->input('code').'%')
 					->skip($offset)
 					->take($limit)
 					->select('product.*', 'product_age.name as size')
@@ -116,7 +161,7 @@ class product extends Model
 		}
 
 		return array(
-			'count' => DB::table('product')->where('category', $req['id'])->count(),
+			'count' => DB::table('product')->where('code', 'like', '%'.$req->input('code').'%')->count(),
 			'result' => $filter
 			);
 	}
