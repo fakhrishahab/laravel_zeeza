@@ -42,7 +42,8 @@ Route::group(['prefix'=>'product'], function(){
 	Route::post('create', 'productController@create');
 	Route::get('detail', 'productController@show');	
 	Route::get('search', 'productController@search');
-	Route::put('edit', 'productController@edit');
+	Route::post('edit', 'productController@edit');
+	Route::delete('delete', 'productController@delete');
 });
 
 Route::group(['prefix'=>'type'], function(){
@@ -69,9 +70,25 @@ Route::group(['prefix'=>'admin_content'], function(){
 });
 
 Route::group(['prefix'=>'admin_category'], function(){
-	Route::post('create', 'CategoryController@create');
+	Route::get('', 'AdminCategoryController@index');
+	Route::post('create', 'AdminCategoryController@create');
+	Route::get('detail','AdminCategoryController@detail');	
+	Route::put('edit', 'AdminCategoryController@edit');
+	Route::delete('delete', 'AdminCategoryController@delete');
 });
 
 Route::group(['prefix'=>'admin_type'], function(){
+	Route::get('', 'AdminTypeController@index');
+	Route::get('detail','AdminTypeController@detail');
 	Route::post('create', 'AdminTypeController@create');
+	Route::put('edit','AdminTypeController@edit');
+	Route::delete('delete', 'AdminTypeController@delete');
+});
+
+Route::group(['prefix'=>'admin_brand'], function(){
+	Route::get('','AdminBrandController@index');
+	Route::get('detail','AdminBrandController@detail');
+	Route::post('create', 'AdminBrandController@create');
+	Route::put('edit','AdminBrandController@edit');
+	Route::delete('delete', 'AdminBrandController@delete');
 });

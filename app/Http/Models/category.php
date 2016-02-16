@@ -8,8 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class category extends Model
 {
 	protected $table = "product_category";
-	function get_data(){
-		return DB::table('product_category')->orderBy('id_category')->get();
+	public $timestamps = false;
+	function get_data($limit, $offset, $id){
+
+		if($id != '' || $id != null){
+			$result = DB::table('product_category')->where('name','like', '%'.$id.'%')->skip($offset)->take($limit)->get();
+			$count = DB::table('product_category')->where('name','like', '%'.$id.'%')->count();
+		}else{
+			$result = DB::table('product_category')->skip($offset)->take($limit)->get();
+			$count = DB::table('product_category')->count();
+		}
+
+		return array(
+				'count' => $count,
+				'result' => $result
+			);
 	}
 
 	function get_type($id){

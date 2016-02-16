@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Response;
 use File;
+use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Http\Models\product;
 use Illuminate\Support\Facades\Input;
 use Intervention\Image\Image;
+use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\File;
 
 // use Input;
 
@@ -54,7 +57,7 @@ class productController extends Controller
         $input = Input::all();
         $product = new product;
 
-        $product->save_product($input);        
+        $product->save_product($input); 
     }
 
     /**
@@ -86,8 +89,10 @@ class productController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit(Request $request)
-    {
-        return $request->input();
+    {         
+        // echo 'abs';  
+        $input = Input::all();
+        return $this->data->update_data($input);
     }
 
     /**
@@ -97,9 +102,9 @@ class productController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        // 
     }
 
     /**
@@ -130,5 +135,16 @@ class productController extends Controller
     function search(Request $request){
         // $code = $request->input('code');
         return $this->data->search_product($request);
+    }
+
+    function delete(Request $request){
+        // $id = $request->input('id');
+        $id = $request->input('id');
+        $code = $request->input('code');
+        @unlink('public/upload/'.$code.'.jpg');
+        // return $request->input('id');
+        return DB::table('product')
+                ->where('id', $id)
+                ->delete();
     }
 }

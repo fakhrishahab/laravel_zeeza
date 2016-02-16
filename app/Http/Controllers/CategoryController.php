@@ -28,17 +28,5 @@ class CategoryController extends Controller
 
     function getSize(){
         return $this->data->get_size();
-    }
-
-    function create(Request $request){
-        $category = new category;
-        $category->name = $request->input('name');
-        $category->save();
-
-        return Response::json(array(
-            'error' => false,
-            'pages' => $category->toArray()),
-            200
-        );
-    }
+    }    
 }

@@ -21,7 +21,7 @@ class product extends Model
 	public $timestamps = false;
 	function save_product($input){
 		$product = new Product();
-		echo Request::file('image');
+		// echo Request::file('image');
         $product->name = $input['name'];
         $product->category = $input['category'];
         $product->type = $input['type'];
@@ -37,7 +37,7 @@ class product extends Model
         $file = Request::file('image');
         $extension = $file->getClientOriginalExtension();
         $destinationPath = './public/upload';
-        $fileName = $input['product_code'].'.'.$extension;
+        $fileName = $input['product_code'].'.jpg';
         Request::file('image')->move($destinationPath, $fileName);
 		// $extension = $file->getClientOriginalExtension();
 		// Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
@@ -46,13 +46,13 @@ class product extends Model
 		// $entry->original_filename = $file->getClientOriginalName();
 		// $entry->filename = $file->getFilename().'.'.$extension;
 
-        $product->save();
-
-        return Response::json(array(
-            'error' => false,
-            'pages' => $product->toArray()),
-            200
-        );
+        if($product->save()){
+        	return Response::json(array(
+	            'success' => true,
+	            'pages' => $product->code),
+	            200
+	        );
+        }        
 	}
 
 	function get_brand(){
@@ -166,5 +166,26 @@ class product extends Model
 			'count' => DB::table('product')->where('code', 'like', '%'.$req->input('code').'%')->count(),
 			'result' => $filter
 			);
+	}
+
+	function update_data($input){
+		$file = Request::file('image');
+        $extension = $file->getClientOriginalExtension();
+        $destinationPath = './public/upload';
+        $fileName = $input['product_code'].'.jpg';
+        Request::file('image')->move($destinationPath, $fileName);
+
+		return DB::table('product')
+			->where('id', $input['id'])
+			->update([
+					'category' => $input['category'],
+					'age' => $input['age'],
+					'type' => $input['type'],
+					'name' => $input['name'],
+					'description' => $input['description'],
+					'price' => $input['price'],
+					'price_disc' => $input['price_disc'],
+					'price_reseller' => $input['price_reseller']
+				]);
 	}
 }
