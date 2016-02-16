@@ -92,3 +92,19 @@ Route::group(['prefix'=>'admin_brand'], function(){
 	Route::put('edit','AdminBrandController@edit');
 	Route::delete('delete', 'AdminBrandController@delete');
 });
+
+Route::group(['prefix'=>'admin_size'], function(){
+	Route::get('','AdminSizeController@index');
+	Route::get('detail','AdminSizeController@detail');
+	Route::post('create', 'AdminSizeController@create');
+	Route::put('edit','AdminSizeController@edit');
+	Route::delete('delete', 'AdminSizeController@delete');
+});
+
+Route::group(['prefix'=>'admin_menu'], function(){
+	Route::get('','AdminMenuController@index');
+	Route::get('detail','AdminMenuController@detail');
+	Route::post('create', 'AdminMenuController@create');
+	Route::put('edit','AdminMenuController@edit');
+	Route::delete('delete', 'AdminMenuController@delete');
+});
