@@ -169,11 +169,15 @@ class product extends Model
 	}
 
 	function update_data($input){
-		$file = Request::file('image');
-        $extension = $file->getClientOriginalExtension();
-        $destinationPath = './public/upload';
-        $fileName = $input['product_code'].'.jpg';
-        Request::file('image')->move($destinationPath, $fileName);
+		// print_r($input['image']);
+		if($input['image']){
+			$file = Request::file('image');
+	        $extension = $file->getClientOriginalExtension();
+	        $destinationPath = './public/upload';
+	        $fileName = $input['product_code'].'.jpg';
+	        Request::file('image')->move($destinationPath, $fileName);
+		}
+		
 
 		return DB::table('product')
 			->where('id', $input['id'])

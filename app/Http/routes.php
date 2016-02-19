@@ -26,6 +26,10 @@ Route::get('/', function () {
 |
 */
 
+// Route::post('oauth/access_token', function() {
+//     return Response::json(Authorizer::issueAccessToken());
+// });
+
 Route::group(['middleware' => ['web']], function () {
     //
 });
@@ -68,6 +72,8 @@ Route::group(['prefix'=>'admin_content'], function(){
 	Route::get('menu', 'adminContentController@getMenu');
 	Route::get('menu_detail', 'adminContentController@getMenuDetail');
 });
+
+// Route::post('login', 'AdminLoginController@store');
 
 Route::group(['prefix'=>'admin_category'], function(){
 	Route::get('', 'AdminCategoryController@index');
