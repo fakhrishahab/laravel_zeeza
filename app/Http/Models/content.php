@@ -37,9 +37,9 @@ class content extends Model
 	}
 
 	function get_nav(){
-		$category = DB::table('product_category')->select('id_category', 'name')->orderBy('rank')->get();
+		$category = DB::table('category')->select('id_category', 'name')->orderBy('rank')->get();
 		foreach ($category as $key => $value) {
-			$category[$key]->child = DB::table('product_type')->select('id_type', 'name')->where('id_category', $category[$key]->id_category)->orderBy('rank')->get();
+			$category[$key]->child = DB::table('type')->select('id_type', 'name')->where('id_category', $category[$key]->id_category)->orderBy('rank')->get();
 		}
 		return $category;
 	}

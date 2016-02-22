@@ -46,12 +46,12 @@ class menu extends Model
 		if($id){
 			return DB::table('menu_content')->where('id', $id)->orderBy('id')->get();
 		}else{
-			// return DB::table('product_type')->orderBy('id_type')->get();
+			// return DB::table('type')->orderBy('id_type')->get();
 			$result = DB::table('menu_content')
 						->get();
 			return $result;
 		}
 		// return $id;
-		// return DB::table('product_type')->where('id_category', $id)->orderBy('id_type')->get();	
+		// return DB::table('type')->where('id_category', $id)->orderBy('id_type')->get();	
 	}
 }

@@ -23,7 +23,7 @@ class AdminTypeController extends Controller
         if($request->input()){
             return $this->data->get_data($limit, $offset, $id);
         }else{
-            return DB::table('product_type')->get();
+            return DB::table('type')->get();
         }
     }
 
@@ -45,7 +45,7 @@ class AdminTypeController extends Controller
 
     function detail(Request $request){
         $id = $request->input('id');
-        return DB::table('product_type')->where('id_type', $id)->get();
+        return DB::table('type')->where('id_type', $id)->get();
     }
 
     function edit(Request $request){
@@ -53,7 +53,7 @@ class AdminTypeController extends Controller
         $category = $request->input('id_category');
         $rank = $request->input('rank');
         $name = $request->input('name');
-        return DB::table('product_type')
+        return DB::table('type')
                 ->where('id_type', $id)
                 ->update([
                         'rank' => $rank,
@@ -64,7 +64,7 @@ class AdminTypeController extends Controller
 
     function delete(Request $request){
         $id = $request->input('id');
-        return DB::table('product_type')
+        return DB::table('type')
                 ->where('id_type', $id)
                 ->delete();
     }

@@ -56,7 +56,10 @@ class productController extends Controller
     {
         $input = Input::all();
         $product = new product;
-
+        // $type = explode(',',$input['type']);
+        // foreach ($type as $key => $value) {
+        //     echo $value.'<br>';
+        // }
         $product->save_product($input); 
     }
 

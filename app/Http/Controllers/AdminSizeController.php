@@ -23,7 +23,7 @@ class AdminSizeController extends Controller
         if($request->input()){
             return $this->data->get_data($limit, $offset, $name);
         }else{
-            return DB::table('product_age')->get();
+            return DB::table('age')->get();
         }
     }
 
@@ -43,13 +43,13 @@ class AdminSizeController extends Controller
 
     function detail(Request $request){
         $id = $request->input('id');
-        return DB::table('product_age')->where('id_age', $id)->get();
+        return DB::table('age')->where('id_age', $id)->get();
     }
 
     function edit(Request $request){
         $id = $request->input('id');
         $name = $request->input('name');
-        return DB::table('product_age')
+        return DB::table('age')
                 ->where('id_age', $id)
                 ->update([
                         'name' => $name
@@ -58,7 +58,7 @@ class AdminSizeController extends Controller
 
     function delete(Request $request){
         $id = $request->input('id');
-        return DB::table('product_age')
+        return DB::table('age')
                 ->where('id_age', $id)
                 ->delete();
     }

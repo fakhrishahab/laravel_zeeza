@@ -29,12 +29,12 @@ class brand extends Model
 		if($id){
 			return DB::table('product_brand')->where('id', $id)->orderBy('id')->get();
 		}else{
-			// return DB::table('product_type')->orderBy('id_type')->get();
+			// return DB::table('type')->orderBy('id_type')->get();
 			$result = DB::table('product_brand')
 						->get();
 			return $result;
 		}
 		// return $id;
-		// return DB::table('product_type')->where('id_category', $id)->orderBy('id_type')->get();	
+		// return DB::table('type')->where('id_category', $id)->orderBy('id_type')->get();	
 	}
 }

@@ -9,6 +9,7 @@ use Config;
 // use Illuminate\Http\Request;
 // use App\Fileentry;
 // use Fileentry;
+use Image;
 use Request;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Input;
@@ -23,9 +24,9 @@ class product extends Model
 		$product = new Product();
 		// echo Request::file('image');
         $product->name = $input['name'];
-        $product->category = $input['category'];
-        $product->type = $input['type'];
-        $product->age = $input['age'];
+        // $product->category = $input['category'];
+        // $product->type = $input['type'];
+        // $product->age = $input['age'];
         $product->description = $input['description'];
         $product->price = $input['price'];
         $product->price_disc = $input['price_disc'];
@@ -34,22 +35,34 @@ class product extends Model
         $product->code = $input['product_code'];
         $product->created_date = Carbon::now();
 
+        $type = explode(',',$input['type']);
+        $age = explode(',',$input['age']);
+
         $file = Request::file('image');
         $extension = $file->getClientOriginalExtension();
-        $destinationPath = './public/upload';
+        $destinationPath = './public/upload/';
         $fileName = $input['product_code'].'.jpg';
-        Request::file('image')->move($destinationPath, $fileName);
-		// $extension = $file->getClientOriginalExtension();
-		// Storage::disk('local')->put($file->getFilename().'.'.$extension,  File::get($file));
-		// $entry = new Fileentry();
-		// $entry->mime = $file->getClientMimeType();
-		// $entry->original_filename = $file->getClientOriginalName();
-		// $entry->filename = $file->getFilename().'.'.$extension;
+        // Request::file('image')->move($destinationPath, $fileName);
 
+        $img = Image::make($file->getRealPath());
+        $img->resize(null, 600, function($constraint){$constraint->aspectRatio();})->save($destinationPath.$fileName);
+
+        // $db_type = new Product_type();
         if($product->save()){
+        	$arr_type=[];
+        	$arr_age=[];
+        	foreach ($type as $key => $value) {
+        		array_push($arr_type, ['product_id'=>$product->id, 'type'=>$value]);
+        	}
+        	foreach ($age as $key => $value) {
+        		array_push($arr_age, ['product_id'=>$product->id, 'age'=>$value]);
+        	}
+        	DB::table('product_type')->insert($arr_type);
+        	DB::table('product_age')->insert($arr_age);
         	return Response::json(array(
 	            'success' => true,
-	            'pages' => $product->code),
+	            'pages' => $product->code,
+	            'last_insert_id' => $product->id),
 	            200
 	        );
         }        
@@ -94,15 +107,20 @@ class product extends Model
 		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
 		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
 		$filter = DB::table('product')
-					->join('product_age', 'product_age.id_age', '=', 'product.age')
+					// ->join('age', 'age.id_age', '=', 'product.age')
 					// ->orderBy('created_date', 'DESC')
 					->skip($offset)
 					->take($limit)
-					->select('product.*', 'product_age.name as size')
-					->orderBy('product.created_date', 'DESC')
+					// ->select('product.*', 'age.name as size')
+					->orderBy('created_date', 'DESC')
 					->get();
 		foreach ($filter as $key => $value) {
 			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+			$filter[$key]->size = DB::table('product_age')
+									->join('age', 'age.id_age', '=', 'product_age.age')
+									->select('age.id_age','age.name')
+									->where('product_age.product_id', $filter[$key]->id)
+									->get();
 		}
 
 		return $filter;
@@ -110,11 +128,14 @@ class product extends Model
 
 	function show_product($id){
 		$product = DB::table('product')
-					->join('product_age', 'product_age.id_age', '=', 'product.age')
-					->where('product.id', $id)
-					->select('product.*', 'product_age.name as size')
+					->where('id', $id)
 					->get();
 		$product[0]->image = Config::get('constant.SITE_PATH').'image?img='.$product[0]->code;
+		$product[0]->size =  DB::table('product_age')
+									->join('age', 'age.id_age', '=', 'product_age.age')
+									->select('age.id_age','age.name')
+									->where('product_age.product_id', $product[0]->id)
+									->get();
 		return $product;
 	}
 
@@ -122,27 +143,50 @@ class product extends Model
 		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
 		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
 		if($req->input('id')){
-			$where = ['product.category' => $req->input('id')];
-		}else if($req->input('size')){
-			$where = ['product.age' => $req->input('size')];
-		}else if($req->input('brand')){
-			$where = ['product.brand' => $req->input('brand')];
-		}
-
-		$filter = DB::table('product')
-					->join('product_age', 'product_age.id_age', '=', 'product.age')
+			$where = ['product_type.type' => $req->input('id')];
+			$table = 'product_type';
+			$filter = DB::table('product_type')
+					->join('product', 'product.id', '=', 'product_type.product_id')					
 					->where($where)
 					->skip($offset)
 					->take($limit)
-					->select('product.*', 'product_age.name as size')
-					->orderBy('product.price_disc')
+					->select('product.*', 'product_type.type')
 					->get();
+
+		}else if($req->input('size')){
+			$where = ['product_age.age' => $req->input('size')];
+			$table = 'product_age';
+			$filter = DB::table($table)
+					->join('product', 'product.id', '=', 'product_age.product_id')					
+					->where($where)
+					->skip($offset)
+					->take($limit)
+					->select('product.*', 'product_age.age')
+					->get();
+
+		}else if($req->input('brand')){
+			$where = ['product.brand' => $req->input('brand')];
+			$table = 'product';
+			$filter = DB::table($table)
+					->join('product_brand', 'product.brand', '=', 'product_brand.id')
+					->where($where)
+					->skip($offset)
+					->take($limit)
+					->select('product.*')
+					->get();
+		}
+
 		foreach ($filter as $key => $value) {
 			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+			$filter[$key]->size =  DB::table('product_age')
+									->join('age', 'age.id_age', '=', 'product_age.age')
+									->select('age.id_age','age.name')
+									->where('product_age.product_id', $filter[$key]->id)
+									->get();
 		}
 
 		return array(
-			'count' => DB::table('product')->where($where)->count(),
+			'count' => DB::table($table)->where($where)->count(),
 			'result' => $filter
 			);
 	}
@@ -151,15 +195,18 @@ class product extends Model
 		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
 		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
 		$filter = DB::table('product')
-					->join('product_age', 'product_age.id_age', '=', 'product.age')
-					->where('product.code', 'like', '%'.$req->input('code').'%')
+					->where('code', 'like', '%'.$req->input('code').'%')
 					->skip($offset)
 					->take($limit)
-					->select('product.*', 'product_age.name as size')
-					->orderBy('product.created_date')
+					->orderBy('created_date')
 					->get();
 		foreach ($filter as $key => $value) {
 			$filter[$key]->image = Config::get('constant.SITE_PATH').'image?img='.$filter[$key]->code;
+			$filter[$key]->size =  DB::table('product_age')
+									->join('age', 'age.id_age', '=', 'product_age.age')
+									->select('age.id_age','age.name')
+									->where('product_age.product_id', $filter[$key]->id)
+									->get();
 		}
 
 		return array(
@@ -173,18 +220,36 @@ class product extends Model
 		if($input['image']){
 			$file = Request::file('image');
 	        $extension = $file->getClientOriginalExtension();
-	        $destinationPath = './public/upload';
+	        $destinationPath = './public/upload/';
 	        $fileName = $input['product_code'].'.jpg';
-	        Request::file('image')->move($destinationPath, $fileName);
+	        // Request::file('image')->move($destinationPath, $fileName);
+	        Image::make($file->getRealPath())->fit(600)->save($destinationPath.$fileName);
 		}
+
+		DB::table('product_type')
+                ->where('product_id', $input['id'])
+                ->delete();
+        DB::table('product_age')
+                ->where('product_id', $input['id'])
+                ->delete();
 		
+		$type = explode(',',$input['type']);
+        $age = explode(',',$input['age']);
+
+        $arr_type=[];
+    	$arr_age=[];
+    	foreach ($type as $key => $value) {
+    		array_push($arr_type, ['product_id'=>$input['id'], 'type'=>$value]);
+    	}
+    	foreach ($age as $key => $value) {
+    		array_push($arr_age, ['product_id'=>$input['id'], 'age'=>$value]);
+    	}
+    	DB::table('product_type')->insert($arr_type);
+    	DB::table('product_age')->insert($arr_age);
 
 		return DB::table('product')
 			->where('id', $input['id'])
 			->update([
-					'category' => $input['category'],
-					'age' => $input['age'],
-					'type' => $input['type'],
 					'name' => $input['name'],
 					'description' => $input['description'],
 					'price' => $input['price'],

@@ -24,7 +24,7 @@ class AdminCategoryController extends Controller
     	if($request->input()){
     		return $this->data->get_data($limit, $offset, $id);
     	}else{
-    		return DB::table('product_category')->get();
+    		return DB::table('category')->get();
     	}
     }
 
@@ -42,14 +42,14 @@ class AdminCategoryController extends Controller
 
     function detail(Request $request){
     	$id = $request->input('id');
-    	return DB::table('product_category')->where('id_category', $id)->get();
+    	return DB::table('category')->where('id_category', $id)->get();
     }
 
     function edit(Request $request){
     	$id = $request->input('id');
     	$rank = $request->input('rank');
     	$name = $request->input('name');
-    	return DB::table('product_category')
+    	return DB::table('category')
     			->where('id_category', $id)
     			->update([
     					'rank' => $rank,
@@ -59,7 +59,7 @@ class AdminCategoryController extends Controller
 
     function delete(Request $request){
     	$id = $request->input('id');
-    	return DB::table('product_category')
+    	return DB::table('category')
     			->where('id_category', $id)
     			->delete();
     }
