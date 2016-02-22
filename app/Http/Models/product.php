@@ -131,6 +131,11 @@ class product extends Model
 					->where('id', $id)
 					->get();
 		$product[0]->image = Config::get('constant.SITE_PATH').'image?img='.$product[0]->code;
+		$product[0]->type =  DB::table('product_type')
+									->join('type', 'type.id_type', '=', 'product_type.type')
+									->select('type.id_type','type.name')
+									->where('product_type.product_id', $product[0]->id)
+									->get();
 		$product[0]->size =  DB::table('product_age')
 									->join('age', 'age.id_age', '=', 'product_age.age')
 									->select('age.id_age','age.name')
