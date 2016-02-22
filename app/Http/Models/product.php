@@ -87,10 +87,10 @@ class product extends Model
 	function get_data($limit, $offset, $id){
 
 		if($id != null || $id != ''){
-			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->get();	
+			$result = DB::table('product')->where('code','like', '%'.$id.'%')->skip($offset)->take($limit)->orderBy('created_date','DESC')->get();	
 			$count = DB::table('product')->where('code','like', '%'.$id.'%')->count();
 		}else{
-			$result = DB::table('product')->skip($offset)->take($limit)->get();
+			$result = DB::table('product')->skip($offset)->take($limit)->orderBy('created_date','DESC')->get();
 			$count = DB::table('product')->count();
 		}
 		// return DB::table('product')->count();
