@@ -41,6 +41,9 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+// $app->singleton(LucaDegasperi\OAuth2Server\Storage\FluentStorageServiceProvider::class);
+// $app->singleton(Optimus\OAuth2Server\OAuth2ServerServiceProvider::class);
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application

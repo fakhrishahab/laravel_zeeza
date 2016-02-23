@@ -21,7 +21,7 @@ class AdminCategoryController extends Controller
     	$limit = $request->input('limit');
     	$offset = $request->input('offset');
     	$id = $request->input('id');
-    	if($request->input()){
+    	if($limit){
     		return $this->data->get_data($limit, $offset, $id);
     	}else{
     		return DB::table('category')->get();

@@ -10,7 +10,7 @@
 | and give it the controller to call when that URI is requested.
 |
 */
-
+use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
@@ -26,8 +26,20 @@ Route::get('/', function () {
 |
 */
 
-// Route::post('oauth/access_token', function() {
-//     return Response::json(Authorizer::issueAccessToken());
+Route::post('oauth/access_token', function() {
+    return Response::json(Authorizer::issueAccessToken());
+});
+
+Route::post('login', 'LoginController@login');
+// Route::post('login', function(Request $request) {
+// 	$credentials = [
+// 		'username' => $request->username,
+// 		'password' => $request->password,
+// 		'grant_type' => $request->grant_type
+// 	];
+// 	// return $request->username;
+//     // $credentials = app()->make('request')->input("credentials");
+//     return App::make('App\Http\Controllers\Auth\CurlController')->proxy($credentials);
 // });
 
 Route::group(['middleware' => ['web']], function () {
@@ -75,7 +87,7 @@ Route::group(['prefix'=>'admin_content'], function(){
 
 // Route::post('login', 'AdminLoginController@store');
 
-Route::group(['prefix'=>'admin_category'], function(){
+Route::group(['prefix'=>'admin_category', 'middleware' => 'oauth'], function(){
 	Route::get('', 'AdminCategoryController@index');
 	Route::post('create', 'AdminCategoryController@create');
 	Route::get('detail','AdminCategoryController@detail');	
@@ -83,7 +95,7 @@ Route::group(['prefix'=>'admin_category'], function(){
 	Route::delete('delete', 'AdminCategoryController@delete');
 });
 
-Route::group(['prefix'=>'admin_type'], function(){
+Route::group(['prefix'=>'admin_type', 'middleware' => 'oauth'], function(){
 	Route::get('', 'AdminTypeController@index');
 	Route::get('detail','AdminTypeController@detail');
 	Route::post('create', 'AdminTypeController@create');
@@ -91,7 +103,7 @@ Route::group(['prefix'=>'admin_type'], function(){
 	Route::delete('delete', 'AdminTypeController@delete');
 });
 
-Route::group(['prefix'=>'admin_brand'], function(){
+Route::group(['prefix'=>'admin_brand', 'middleware' => 'oauth'], function(){
 	Route::get('','AdminBrandController@index');
 	Route::get('detail','AdminBrandController@detail');
 	Route::post('create', 'AdminBrandController@create');
@@ -99,7 +111,7 @@ Route::group(['prefix'=>'admin_brand'], function(){
 	Route::delete('delete', 'AdminBrandController@delete');
 });
 
-Route::group(['prefix'=>'admin_size'], function(){
+Route::group(['prefix'=>'admin_size', 'middleware' => 'oauth'], function(){
 	Route::get('','AdminSizeController@index');
 	Route::get('detail','AdminSizeController@detail');
 	Route::post('create', 'AdminSizeController@create');
@@ -107,7 +119,7 @@ Route::group(['prefix'=>'admin_size'], function(){
 	Route::delete('delete', 'AdminSizeController@delete');
 });
 
-Route::group(['prefix'=>'admin_menu'], function(){
+Route::group(['prefix'=>'admin_menu', 'middleware' => 'oauth'], function(){
 	Route::get('','AdminMenuController@index');
 	Route::get('detail','AdminMenuController@detail');
 	Route::post('create', 'AdminMenuController@create');
