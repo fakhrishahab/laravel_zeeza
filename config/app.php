@@ -161,8 +161,17 @@ return [
 
         //      'Illuminate\Hashing\HashServiceProvider',
         App\Providers\ShaHashServiceProvider::class,
+        Ixudra\Curl\CurlServiceProvider::class,
 
     ],
+
+    // 'facades'       => [
+
+    //     //...
+    //     'Curl'          => Ixudra\Curl\Facades\Curl::class,
+
+    // ],
+
 
     /*
     |--------------------------------------------------------------------------
@@ -209,6 +218,7 @@ return [
         'View'      => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
         'Authorizer' => LucaDegasperi\OAuth2Server\Facades\Authorizer::class,
+        'Curl'       => Ixudra\Curl\Facades\Curl::class,
 
     ],
 

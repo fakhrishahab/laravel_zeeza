@@ -3575,5 +3575,50 @@
             "rest",
             "web service"
         ]
+    },
+    {
+        "name": "ixudra/curl",
+        "version": "5.1.0",
+        "version_normalized": "5.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ixudra/curl.git",
+            "reference": "c5591e94cb6a054da3b8ebc79af67105b7286a78"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ixudra/curl/zipball/c5591e94cb6a054da3b8ebc79af67105b7286a78",
+            "reference": "c5591e94cb6a054da3b8ebc79af67105b7286a78",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/support": ">=4.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2015-10-12 19:19:27",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "Ixudra\\Curl\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Jan Oris",
+                "email": "jan.oris@ixudra.be"
+            }
+        ],
+        "description": "Custom PHP Curl library for the Laravel 5 framework - developed by Ixudra",
+        "homepage": "http://ixudra.be",
+        "keywords": [
+            "Ixudra",
+            "curl",
+            "laravel"
+        ]
     }
 ]

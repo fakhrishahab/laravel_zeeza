@@ -12,6 +12,7 @@ use App\Http\Models\product;
 use Illuminate\Support\Facades\Input;
 use Intervention\Image\Image;
 use Illuminate\Support\Facades\Storage;
+use Cache;
 // use Illuminate\Support\Facades\File;
 
 // use Input;
