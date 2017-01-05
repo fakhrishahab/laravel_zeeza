@@ -105,7 +105,7 @@ class product extends Model
 		// return DB::table('product')->orderBy('created_date', 'DESC')->skip(0)->take(12)->get();
 
 		$offset =  ($req->input('offset') ? $req->input('offset') : 0);
-		$limit =  ($req->input('limit') ? $req->input('limit') : 12);
+		$limit =  ($req->input('limit') ? $req->input('limit') : 36);
 		$filter = DB::table('product')
 					// ->join('age', 'age.id_age', '=', 'product.age')
 					// ->orderBy('created_date', 'DESC')
